@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LiveBid - Real-Time Auction & Bidding Floor</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="auction-header">
+    <div class="brand">
+      <span class="brand-icon">🔨</span>
+      <h1>LiveBid Arena</h1>
+    </div>
+
+    <!-- Lot Switcher Dropdown -->
+    <div>
+      <select id="auctionSelector" style="background: #1f2937; color: #ffffff; border: 1px solid #374151; padding: 6px 12px; border-radius: 8px; font-weight: 600; outline: none; cursor: pointer;">
+        <option value="AUC_VINTAGE_99">🎸 1967 Vintage Fender Stratocaster</option>
+        <option value="AUC_ROLEX_01">⌚ 1972 Rolex Submariner Ref. 1680</option>
+      </select>
+    </div>
+
+    <div class="header-right">
+      <div class="viewer-badge">
+        <span class="pulse-dot"></span>
+        <span id="viewerCount">1</span> watching
+      </div>
+      <div class="user-profile-badge" id="userBadge">
+        👤 <span id="userNameDisplay">Bidder</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Anti-Snipe Alert Banner -->
+  <div class="main-container" style="margin-bottom: 0; padding-bottom: 0;">
+    <div id="snipeBanner" class="snipe-banner" style="grid-column: 1 / -1;">
+      ⚡ Anti-Snipe Rule Triggered! Clock extended by 20 seconds.
+    </div>
+  </div>
+
+  <!-- Main Trading Floor -->
+  <main class="main-container">
+    
+    <!-- Left Column: Lot Information & Bidding Pad -->
+    <section class="lot-card">
+      <div class="lot-image-wrapper">
+        <img id="lotImage" src="" alt="Auction Item" class="lot-image" />
+        <div class="lot-status-tag" id="lotStatus">LIVE NOW</div>
+      </div>
+
+      <div class="lot-info">
+        <h2 id="lotTitle">Loading Auction Lot...</h2>
+        <p id="lotDescription">Fetching specifications from the bidding engine...</p>
+
+        <!-- Price & Synchronous Timer Box -->
+        <div class="price-timer-grid">
+          <div class="price-box">
+            <span class="box-label">Current Highest Bid</span>
+            <div class="current-price" id="currentPriceDisplay">₹0</div>
+            <div class="highest-bidder-pill" id="highestBidderDisplay">No bids yet</div>
+          </div>
+
+          <div class="timer-box">
+            <span class="box-label">Time Remaining</span>
+            <div class="countdown-timer" id="countdownDisplay">00:00</div>
+            <span style="font-size: 0.8rem; color: #9ca3af;" id="minIncrementText">Min Inc: ₹2,000</span>
+          </div>
+        </div>
+
+        <!-- Bidding Controls Section -->
+        <div class="bidding-controls" id="biddingControls">
+          <span class="quick-bids-label">Quick Bid Increments:</span>
+          <div class="quick-bids-grid">
+            <button class="btn-quick" id="quickBid1">+₹2,000</button>
+            <button class="btn-quick" id="quickBid2">+₹5,000</button>
+            <button class="btn-quick" id="quickBid3">+₹10,000</button>
+          </div>
+
+          <form id="customBidForm" class="custom-bid-form">
+            <input
+              type="number"
+              id="customBidInput"
+              class="custom-bid-input"
+              placeholder="Enter custom amount"
+              step="1000"
+              required
+            />
+            <button type="submit" class="btn-place-bid" id="placeBidBtn">
+              🔨 Place Bid
+            </button>
+          </form>
+        </div>
+
+        <!-- Sold Status Box (Shown when auction ends) -->
+        <div id="soldBox" class="sold-overlay" style="display: none;">
+          <div class="sold-title">AUCTION CLOSED</div>
+          <p id="soldWinnerText" style="font-size: 1.2rem; color: #f3f4f6; margin-top: 8px;">Sold to -- for ₹0</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Right Column: Auditable Real-Time Bid History Feed -->
+    <aside class="activity-card">
+      <h3>
+        <span>📜 Live Bid History</span>
+        <span style="font-size: 0.8rem; color: #34d399;" id="bidCountBadge">0 Bids</span>
+      </h3>
+      <ul class="history-list" id="bidHistoryList">
+        <!-- Live bid list appended dynamically -->
+      </ul>
+    </aside>
+
+  </main>
+
+  <!-- Toast Notification Container for Outbid Alerts -->
+  <div id="toastContainer"></div>
+
+  <!-- Socket.io & Client Application Logic -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
